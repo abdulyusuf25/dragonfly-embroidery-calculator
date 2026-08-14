@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171d23">
+<meta name="description" content="Embroidery stitch time, production time and pricing calculator">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<title>Dragonfly Embroidery Calculator</title>
+<style>
+:root{--bg:#0f1318;--panel:#182027;--field:#1b232b;--line:#34414c;--text:#f4f7fa;--muted:#91a0ab;--blue:#4b86ee;--green:#18b88b;--purple:#625ee9;--result:#edf5ff;--pricebg:#eafbf4;--dark:#17202a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}body{padding-bottom:25px}
+.top{height:64px;background:#171d23;border-bottom:1px solid #27323b;display:flex;align-items:center;padding:0 17px;position:sticky;top:0;z-index:10}.back{font-size:29px;margin-right:12px}.top strong{font-size:20px}
+main{max-width:780px;margin:auto;padding:17px}.hero{text-align:center;padding:10px 0 19px}.hero .emoji{font-size:32px;letter-spacing:12px}.hero h1{font-size:26px;margin:9px 0 6px}.hero p{margin:0;color:var(--muted);font-size:14px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#151b20;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:22px}.tab{height:47px;border:0;border-radius:9px;background:transparent;color:#aab6bf;font-size:16px;font-weight:750}.tab.active{background:var(--purple);color:white}
+.mode-note{background:#182027;border-left:3px solid var(--blue);padding:12px 13px;border-radius:8px;color:#b9c5cd;font-size:13px;margin-bottom:18px}
+label{display:block;font-size:15px;font-weight:750;margin:16px 0 8px}input,select{width:100%;height:55px;border:1px solid var(--line);border-radius:9px;background:var(--field);color:var(--text);font-size:17px;padding:0 12px;outline:none}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 2px #4b86ee22}.hint{font-size:12px;color:var(--muted);margin-top:6px}
+.section{display:flex;align-items:center;gap:12px;color:#8998a5;font-size:11px;font-weight:800;margin:25px 0 2px}.section:before,.section:after{content:"";height:1px;background:var(--line);flex:1}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:13px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.buttons{display:flex;gap:10px;margin-top:23px}.buttons button{height:55px;border:0;border-radius:9px;font-size:16px;font-weight:800}.calc{flex:1;background:var(--purple);color:white}.reset{width:58px;background:#eef2ff;color:#555fd4}
+.card{background:var(--panel);border-radius:14px;padding:19px;margin-top:25px;box-shadow:0 8px 25px #0003}.ct{font-size:19px;font-weight:800;margin-bottom:14px}.ct span{margin-right:8px}.big{background:var(--result);color:#3f82eb;border-radius:12px;padding:20px;text-align:center;font-size:34px;font-weight:850}.big.green{background:var(--pricebg);color:#16ad82}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.stat{background:#f5f7f9;color:var(--dark);border-radius:9px;padding:12px 13px}.stat small{display:block;color:#68747d;margin-bottom:5px}.stat b{font-size:16px}.divider{height:1px;background:#8e969d;margin:29px 0 15px}.summary{background:#f5f7f9;color:#25313a;border-radius:9px;padding:15px;margin-top:15px}.summary b{display:block;margin-bottom:7px}.summary span{color:#697680;font-size:13px}.breakdown{margin-top:13px;background:#11171c;border:1px solid #2f3a43;border-radius:9px;padding:13px;font-size:13px}.line{display:flex;justify-content:space-between;gap:15px;padding:5px 0;color:#b8c3ca}.line.total{border-top:1px solid #3b4650;margin-top:5px;padding-top:10px;color:white;font-weight:800}.error{display:none;background:#3a2025;color:#ffb5bc;border:1px solid #71333b;padding:11px;border-radius:8px;margin-top:14px}.hidden{display:none!important}.footer{text-align:center;color:#64727c;font-size:11px;margin-top:19px}
+@media(max-width:540px){main{padding:14px}.hero h1{font-size:23px}.row3{grid-template-columns:1fr 1fr}.big{font-size:30px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="top"><span class="back">‹</span><strong>Embroidery Calculator</strong></div>
+<main>
+<section class="hero"><div class="emoji">🧵 ⏱️ 💰</div><h1>Time & Price Calculator</h1><p>Estimate machine time and customer pricing</p></section>
+
+<div class="tabs">
+<button class="tab active" id="basicTab">Basic Mode</button>
+<button class="tab" id="businessTab">Business Mode</button>
+</div>
+
+<div id="basic">
+<div class="mode-note">Quick calculation using stitch count, machine speed and your rate per 10,000 stitches.</div>
+<label>Stitch Count</label><input id="bStitches" type="number" inputmode="numeric" min="0" value="23658">
+<div class="section">TIME SETTINGS</div>
+<label>Machine Speed (st/min)</label><input id="bSpeed" type="number" inputmode="numeric" min="1" value="620">
+<div class="hint">Typical range: 350–1200 st/min.</div>
+<div class="section">PRICE SETTINGS</div>
+<label>Price per 10,000 Stitches (₹)</label><input id="bRate" type="number" inputmode="decimal" min="0" value="50">
+<label>Setup/Digitizing Fee (₹)</label><input id="bSetup" type="number" inputmode="decimal" min="0" value="0">
+<div class="buttons"><button class="calc" id="bCalc">🧮 Calculate</button><button class="reset" id="bReset">↻</button></div>
+</div>
+
+<div id="business" class="hidden">
+<div class="mode-note">More realistic production estimate: adds color-change, trim/jump, machine buffer, garment/material cost and profit margin.</div>
+<div class="section">DESIGN & MACHINE</div>
+<label>Stitch Count</label><input id="xStitches" type="number" inputmode="numeric" min="0" value="23658">
+<div class="row">
+<div><label>Machine Speed (st/min)</label><input id="xSpeed" type="number" inputmode="numeric" min="1" value="620"></div>
+<div><label>Color Changes</label><input id="xColors" type="number" inputmode="numeric" min="0" value="4"></div>
+</div>
+<div class="row">
+<div><label>Trims / Jump Stops</label><input id="xTrims" type="number" inputmode="numeric" min="0" value="12"></div>
+<div><label>Production Buffer (%)</label><input id="xBuffer" type="number" inputmode="decimal" min="0" value="10"></div>
+</div>
+
+<div class="section">TIME ADJUSTMENTS</div>
+<div class="row3">
+<div><label>Sec / Color Change</label><input id="xColorSec" type="number" inputmode="decimal" min="0" value="15"></div>
+<div><label>Sec / Trim/Stop</label><input id="xTrimSec" type="number" inputmode="decimal" min="0" value="3"></div>
+<div><label>Buffer %</label><input id="xBuf2" type="number" inputmode="decimal" min="0" value="10"></div>
+</div>
+<div class="hint">The two buffer fields are linked automatically.</div>
+
+<div class="section">CUSTOMER PRICING</div>
+<div class="row">
+<div><label>Price / 10,000 Stitches (₹)</label><input id="xRate" type="number" inputmode="decimal" min="0" value="50"></div>
+<div><label>Setup/Digitizing (₹)</label><input id="xSetup" type="number" inputmode="decimal" min="0" value="100"></div>
+</div>
+<div class="row">
+<div><label>Garment / Material Cost (₹)</label><input id="xGarment" type="number" inputmode="decimal" min="0" value="0"></div>
+<div><label>Other Cost (₹)</label><input id="xOther" type="number" inputmode="decimal" min="0" value="0"></div>
+</div>
+<label>Profit Margin (%)</label><input id="xMargin" type="number" inputmode="decimal" min="0" max="99.99" value="20">
+<div class="hint">20% margin means profit is 20% of the final selling price, not 20% added to cost.</div>
+
+<div class="buttons"><button class="calc" id="xCalc">🧮 Calculate Business Price</button><button class="reset" id="xReset">↻</button></div>
+</div>
+
+<div id="error" class="error"></div>
+
+<section class="card">
+<div class="ct">⏱️ Estimated Production Time</div>
+<div class="big" id="outTime">38m 9s</div>
+<div class="grid">
+<div class="stat"><small>Base Stitch Time</small><b id="outBase">38.16 min</b></div>
+<div class="stat"><small>Total Minutes</small><b id="outMinutes">38.16 min</b></div>
+</div>
+<div class="grid" id="businessStats">
+<div class="stat"><small>Extra Time</small><b id="outExtra">0.00 min</b></div>
+<div class="stat"><small>Machine Speed</small><b id="outSpeed">620 st/min</b></div>
+</div>
+
+<div class="divider"></div>
+<div class="ct">💰 Estimated Customer Price</div>
+<div class="big green" id="outPrice">₹118.29</div>
+<div class="grid">
+<div class="stat"><small>Stitch Cost</small><b id="outStitch">₹118.29</b></div>
+<div class="stat"><small>Final Selling Price</small><b id="outFinal">₹118.29</b></div>
+</div>
+<div class="breakdown" id="breakdown">
+<div class="line"><span>Stitch cost</span><b id="dStitch">₹118.29</b></div>
+<div class="line"><span>Setup / digitizing</span><b id="dSetup">₹0.00</b></div>
+<div class="line"><span>Garment / material</span><b id="dGarment">₹0.00</b></div>
+<div class="line"><span>Other cost</span><b id="dOther">₹0.00</b></div>
+<div class="line"><span>Profit</span><b id="dProfit">₹0.00</b></div>
+<div class="line total"><span>Customer price</span><b id="dTotal">₹118.29</b></div>
+</div>
+<div class="summary"><b>Summary</b><span id="outSummary">23,658 stitches · 23.66K stitches · 38m 9s</span></div>
+</section>
+<div class="footer">Calculations run locally on this device. Values are saved in your browser.</div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const basicIds=["bStitches","bSpeed","bRate","bSetup"];
+const businessIds=["xStitches","xSpeed","xColors","xTrims","xBuffer","xColorSec","xTrimSec","xBuf2","xRate","xSetup","xGarment","xOther","xMargin"];
+const allIds=[...basicIds,...businessIds];
+const money=n=>"₹"+n.toFixed(2);
+function timeText(min){let s=Math.round(min*60),h=Math.floor(s/3600);s%=3600;let m=Math.floor(s/60),sec=s%60;return h?`${h}h ${m}m ${sec}s`:`${m}m ${sec}s`;}
+function val(id){return Number($(id).value);}
+function validate(ids){
+  for(const id of ids){const n=val(id);if(!Number.isFinite(n)||n<0){showError("Please enter valid non-negative values.");return false;}}
+  if(val("bSpeed")<=0 || val("xSpeed")<=0){showError("Machine speed must be greater than 0.");return false;}
+  if(val("xMargin")>=100){showError("Profit margin must be below 100%.");return false;}
+  $("error").style.display="none";return true;
+}
+function showError(t){$("error").textContent=t;$("error").style.display="block";}
+function basicCalc(){
+ if(!validate(basicIds))return;
+ const st=val("bStitches"),sp=val("bSpeed"),rate=val("bRate"),setup=val("bSetup");
+ const base=st/sp,total=base,cost=st/10000*rate,final=cost+setup;
+ render({base,total,extra:0,sp,st,stitch:cost,final,setup,garment:0,other:0,profit:0,summary:`${st.toLocaleString("en-IN")} stitches · ${(st/1000).toFixed(2)}K stitches · ${timeText(total)}`});
+ save();
+}
+function businessCalc(){
+ if(!validate(businessIds))return;
+ const st=val("xStitches"),sp=val("xSpeed"),colors=val("xColors"),trims=val("xTrims"),colorSec=val("xColorSec"),trimSec=val("xTrimSec"),buf=val("xBuf2");
+ const base=st/sp;
+ const adjustments=(colors*colorSec+trims*trimSec)/60;
+ const subtotalTime=base+adjustments;
+ const total=subtotalTime*(1+buf/100);
+ const stitch=st/10000*val("xRate"),setup=val("xSetup"),garment=val("xGarment"),other=val("xOther");
+ const cost=stitch+setup+garment+other;
+ const margin=val("xMargin")/100;
+ const final=margin>=1?cost:cost/(1-margin);
+ const profit=final-cost;
+ render({base,total,extra:total-base,sp,st,stitch,final,setup,garment,other,profit,summary:`${st.toLocaleString("en-IN")} stitches · ${colors} color changes · ${trims} trims/stops · ${timeText(total)}`});
+ save();
+}
+function render(o){
+ $("outTime").textContent=timeText(o.total);$("outBase").textContent=o.base.toFixed(2)+" min";$("outMinutes").textContent=o.total.toFixed(2)+" min";
+ $("outExtra").textContent=o.extra.toFixed(2)+" min";$("outSpeed").textContent=o.sp.toLocaleString("en-IN")+" st/min";
+ $("outPrice").textContent=money(o.final);$("outStitch").textContent=money(o.stitch);$("outFinal").textContent=money(o.final);
+ $("dStitch").textContent=money(o.stitch);$("dSetup").textContent=money(o.setup);$("dGarment").textContent=money(o.garment);$("dOther").textContent=money(o.other);$("dProfit").textContent=money(o.profit);$("dTotal").textContent=money(o.final);
+ $("outSummary").textContent=o.summary;
+}
+function save(){localStorage.setItem("embroideryV2",JSON.stringify(Object.fromEntries(allIds.map(id=>[id,$(id).value]))));}
+function load(){try{let d=JSON.parse(localStorage.getItem("embroideryV2")||"{}");allIds.forEach(id=>{if(d[id]!=null)$(id).value=d[id]})}catch(e){}}
+function resetBasic(){["bStitches","bSpeed","bRate","bSetup"].forEach((id,i)=>$(id).value=["23658","620","50","0"][i]);basicCalc();}
+function resetBusiness(){const d={xStitches:23658,xSpeed:620,xColors:4,xTrims:12,xBuffer:10,xColorSec:15,xTrimSec:3,xBuf2:10,xRate:50,xSetup:100,xGarment:0,xOther:0,xMargin:20};Object.entries(d).forEach(([k,v])=>$(k).value=v);businessCalc();}
+function setMode(mode){$("basic").classList.toggle("hidden",mode!=="basic");$("business").classList.toggle("hidden",mode!=="business");$("basicTab").classList.toggle("active",mode==="basic");$("businessTab").classList.toggle("active",mode==="business");localStorage.setItem("mode",mode);mode==="basic"?basicCalc():businessCalc();}
+$("basicTab").onclick=()=>setMode("basic");$("businessTab").onclick=()=>setMode("business");$("bCalc").onclick=basicCalc;$("xCalc").onclick=businessCalc;$("bReset").onclick=resetBasic;$("xReset").onclick=resetBusiness;
+$("xBuffer").addEventListener("input",()=>{$("xBuf2").value=$("xBuffer").value});$("xBuf2").addEventListener("input",()=>{$("xBuffer").value=$("xBuf2").value});
+allIds.forEach(id=>$(id).addEventListener("input",()=>{if($("business").classList.contains("hidden"))basicCalc();else businessCalc();}));
+load();setMode(localStorage.getItem("mode")||"basic");
+if("serviceWorker" in navigator && location.protocol!=="file:")addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
